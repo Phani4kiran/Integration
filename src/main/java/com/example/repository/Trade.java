@@ -6,11 +6,15 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.util.Date;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter
-@Setter
+@Data
+@Builder
 @NoArgsConstructor
-@ToString
+@AllArgsConstructor
 public class TradeData {
     private String clientId;
     private String name;
