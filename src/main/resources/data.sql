@@ -1,0 +1,9 @@
+DROP TABLE IF EXISTS Trade;
+
+CREATE TABLE Trade (
+  id INT AUTO_INCREMENT  PRIMARY KEY,
+  client_id VARCHAR(250) NOT NULL,
+  product_name VARCHAR(250) NOT NULL,
+  product_price DOUBLE NOT NULL,
+  product_time DATE DEFAULT CURRENT_TIMESTAMP
+);

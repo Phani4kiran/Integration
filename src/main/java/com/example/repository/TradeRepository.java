@@ -1,7 +1,12 @@
 package com.example.repository;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
-@Component
-public class TradeRepository {
+@Repository
+public interface TradeRepository extends JpaRepository<Trade, Long> {
+//    List<Trade> findByPublished(boolean published);
+//
+//    List<Trade> findByTitleContaining(String title);
 }
