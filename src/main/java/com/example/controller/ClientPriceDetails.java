@@ -5,15 +5,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TradeRequest {
-    private String clientId;
-    private String name;
+public class ClientPriceDetails {
+    private String clientCode;
     private Double price;
-    private Date date;
+    private LocalDate localDate;
 }

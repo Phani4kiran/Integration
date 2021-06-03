@@ -1,25 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:task="http://www.springframework.org/schema/task"
-       xmlns:jdbc="http://www.springframework.org/schema/jdbc"
        xmlns:int="http://www.springframework.org/schema/integration"
        xmlns:int-http="http://www.springframework.org/schema/integration/http"
-       xsi:schemaLocation="http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-4.2.xsd
-		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.2.xsd
-		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       xsi:schemaLocation="	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/integration/http http://www.springframework.org/schema/integration/http/spring-integration-http.xsd
 		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd">
 
-<!--    <int-http:inbound-gateway-->
-<!--            request-channel="httpInboundChannel"-->
-<!--            supported-methods="GET"-->
-<!--            path="/instrumentsBy">-->
-<!--    </int-http:inbound-gateway >-->
-<!--    <int:channel id="httpInboundChannel"></int:channel>-->
-<!--    <int:channel id="httpChannel"></int:channel>-->
+    <int-http:inbound-gateway
+            request-channel="instrumentPricesByClientRequestChannel"
+            reply-channel="instrumentPricesByClientReplyChannel"
+            supported-methods="GET"
+            path="/InstrumentPricesByClient">
+        <int-http:request-mapping consumes="application/json" produces="application/json" />
+    </int-http:inbound-gateway >
+    <int:channel id="instrumentPricesByClientRequestChannel"/>
+    <int:channel id="instrumentPricesByClientReplyChannel"/>
 
-<!--    <bean class="com.example.controller.RestTradeGateway" id="tradeService"/>-->
+    <int:service-activator ref="tradeEndpoint" input-channel="httpInboundGatewayRequestChannel" output-channel="httpInboundGatewayReplyChannel" method="getInstrumentPricesByClient"/>
 
-<!--    <int:service-activator ref="tradeService" input-channel="httpInboundChannel" method="getInstrumentsBy"/>-->
+    <int-http:inbound-gateway
+            request-channel="clientPricesByInstrumentRequestChannel"
+            reply-channel="clientPricesByInstrumentReplyChannel"
+            supported-methods="GET"
+            path="/ClientPricesByInstrument">
+        <int-http:request-mapping consumes="application/json" produces="application/json" />
+    </int-http:inbound-gateway >
+    <int:channel id="clientPricesByInstrumentRequestChannel"/>
+    <int:channel id="clientPricesByInstrumentReplyChannel"/>
+
+    <int:service-activator ref="tradeEndpoint" input-channel="clientPricesByInstrumentRequestChannel" output-channel="clientPricesByInstrumentReplyChannel" method="getClientPricesByInstrumentCode"/>
+
+
+    <int-http:inbound-channel-adapter
+            channel="httpPostChannel" status-code-expression="T(org.springframework.http.HttpStatus).NO_CONTENT"
+            supported-methods="POST" path="/postTrades"
+            request-payload-type="com.example.endpoint.TradeMessage">
+        <int-http:request-mapping consumes="application/json" />
+    </int-http:inbound-channel-adapter>
+    <int:channel id="httpPostChannel" />
+
+    <int:service-activator ref="tradeEndpoint" method="postTrades" input-channel="httpPostChannel" />
+
+
 </beans>
