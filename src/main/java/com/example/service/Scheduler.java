@@ -17,5 +17,6 @@ public class Scheduler {
     @Scheduled(cron = "0 0 0 * * *")
     public void deleteOldRecords() {
         instrumentsRepository.deleteLastMontRecords(LocalDate.now());
+        instrumentsRepository.flush();
     }
 }
